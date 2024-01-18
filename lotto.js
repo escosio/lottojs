@@ -90,9 +90,9 @@ class LottoGame {
             if (this.attempts == 0) {
                 this.attempts = 1
             }
-            this.message = `Congrats! You won on ${this.attempts} attempts and spent $${this.attempts * 2}`
+            this.message = `Congrats! You won on ${this.attempts.toLocaleString()} attempts and spent $${(this.attempts * 2).toLocaleString()}`
         } else {
-            this.message = `Sorry, you played ${this.attempts} times and spent $${this.attempts*2}.00 but did not win.`
+            this.message = `Sorry, you played ${this.attempts.toLocaleString()} times and spent $${(this.attempts*2).toLocaleString()}.00 but did not win.`
         }
         document.getElementById('message').innerHTML = this.message
         console.log(this.attempts)
