@@ -52,7 +52,7 @@ class LottoGame {
 
         while (nums.length < numCount) {
             const randomNumber = Math.floor(Math.random() * 70);
-            if (!(randomNumber in nums)) {
+            if (!nums.includes(randomNumber)) {
                 nums.push(randomNumber)
             }
         }
