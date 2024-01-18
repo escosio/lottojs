@@ -1,0 +1,12 @@
+body {
+    background-color: black;
+    color: white;
+    text-align: center;
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif
+}
+
+button {
+    width: 100px;
+    height: 30px;
+    background-color: ghostwhite;
+}
