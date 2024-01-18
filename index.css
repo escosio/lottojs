@@ -9,4 +9,6 @@ button {
     width: 100px;
     height: 30px;
     background-color: ghostwhite;
+    border-radius: 10px;
+    font-weight: bold;
 }

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +10,67 @@
 <body>
     <h1>Play the Lotto!</h1>
 <!--     <h3>{game.message}</h3> -->
-    <h3>Here are the winning numbers</h3>
+    <h3>Here are the winning numbers: </h3>
     <h3 id="winning_numbers"></h3>
-    <button onClick=playLotto()>Play</button>
+    <button onClick=game.playLotto()>Play</button>
+    <!-- Your numbers -->
+    <h3 id="attempts"></h3>
+    <h2 id="message"></h2>
+    <h3 id="currentPlay"></h3>
 
-    <script src="lotto.js"></script>
+
+    <!-- <script src="lotto.js">
+        const game = new LottoGame()
+        document.getElementById('winning_numbers').innerHTML = game.winningNumbers
+    </script> -->
+    <script>
+        class LottoGame {
+    constructor(winningNumbers, currentNumbers, message, attempts) {
+        this.winningNumbers = this.generateLottoNumbers()
+        this.currentNumbers = []
+        this.message = "Click the button to play"
+        this.attempts = 0
+    }
+
+    generateLottoNumbers() {
+        const nums = []
+
+        while (nums.length <= 6) {
+            const randomNumber = Math.floor(Math.random() * 70);
+            if (!(randomNumber in nums)) {
+                nums.push(randomNumber)
+            }
+        }
+        nums.sort()
+        return nums
+    }
+
+    playLotto(winningNumbers) {
+        this.currentNumbers = this.generateLottoNumbers()
+        var maxAttempts = this.attempts + 1000
+
+        while (this.currentNumbers != winningNumbers && this.attempts < maxAttempts) {
+            this.attempts += 1
+            this.currentNumbers = this.generateLottoNumbers()
+        }
+
+        if (this.currentNumbers != winningNumbers) {
+            this.message = `Sorry, you played ${this.attempts} times and spent $${this.attempts*2}.00 but did not win.`
+            // console.log(this.message)
+        } else {
+            this.message = `Congrats! You won`
+            // console.log(this.message)
+        }
+        document.getElementById('message').innerHTML = game.message
+        console.log(this.attempts)
+        document.getElementById('currentPlay').innerHTML = `Your last play: ${this.currentNumbers}`
+    }
+}
+    const game = new LottoGame()
+
+    document.getElementById('winning_numbers').innerHTML = game.winningNumbers
+    document.getElementById('message').innerHTML = game.message
+    </script>
     
 </body>
 </html>
