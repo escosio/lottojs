@@ -43,7 +43,7 @@ class LottoGame {
         this.currentNumbers = this.generateLottoNumbers()
         // to test if function works correctly, comment out line below:
         // this.currentNumbers = this.winningNumbers
-        this.message = "Click the button to play"
+        this.message = "Click the button to play. Note: a single play will simulate 1000 plays."
         this.attempts = 0
     }
 
@@ -81,6 +81,7 @@ class LottoGame {
                 youWon = true
             } else {
                 this.attempts += 1
+                // document.getElementById('attempts').innerHTML = "Attempts: " + this.attempts
                 this.currentNumbers = this.generateLottoNumbers()
             }
         }
