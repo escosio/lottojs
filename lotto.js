@@ -50,7 +50,7 @@ class LottoGame {
     generateLottoNumbers(numCount = 6) {
         const nums = []
 
-        while (nums.length <= numCount) {
+        while (nums.length < numCount) {
             const randomNumber = Math.floor(Math.random() * 70);
             if (!(randomNumber in nums)) {
                 nums.push(randomNumber)
@@ -60,22 +60,38 @@ class LottoGame {
         return nums
     }
 
+    compareNumbers(numArray1, numArray2) {
+        var match = true
+
+        for (let i = 0; i <= numArray1.length; i++) {
+            if (numArray1[i] != numArray2[i]) {
+                return false
+            }
+        }
+        return match
+    }
+
     playLotto(winningNumbers) {
         // this.currentNumbers = this.generateLottoNumbers()
         var maxAttempts = this.attempts + 1000
+        var youWon = false
 
-        while (this.currentNumbers != this.winningNumbers && this.attempts < maxAttempts) {
-            this.attempts += 1
-            this.currentNumbers = this.generateLottoNumbers()
+        while ((youWon == false) && (this.attempts < maxAttempts)) {
+            if (this.compareNumbers(this.currentNumbers, this.winningNumbers)) {
+                youWon = true
+            } else {
+                this.attempts += 1
+                this.currentNumbers = this.generateLottoNumbers()
+            }
         }
 
-        if (this.currentNumbers != this.winningNumbers) {
-            this.message = `Sorry, you played ${this.attempts} times and spent $${this.attempts*2}.00 but did not win.`
-        } else {
+        if (youWon) {
             if (this.attempts == 0) {
                 this.attempts = 1
             }
             this.message = `Congrats! You won on ${this.attempts} attempts and spent $${this.attempts * 2}`
+        } else {
+            this.message = `Sorry, you played ${this.attempts} times and spent $${this.attempts*2}.00 but did not win.`
         }
         document.getElementById('message').innerHTML = this.message
         console.log(this.attempts)
