@@ -7,23 +7,34 @@ body {
     background-color: black;
     color: white;
     text-align: center;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    /* font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif; */
+    font-family: 'Work Sans', sans-serif;
 }
 
 button {
-    width: 100px;
-    height: 30px;
+    width: 200px;
+    height: 50px;
     background-color: ghostwhite;
     border-radius: 10px;
     font-weight: bold;
     margin-bottom: 80px;
+    margin-top: 20px;
+    font-size: medium;
+    color: black;
 }
 
-h1 {
-    padding: 8%;
+.header-title {
+    padding: 5%;
 }
 
 h3 {
     animation: fadeIn 4s;
 }
 
+#winning_numbers {
+    font-weight: 300;
+}
+
+#yellow-text {
+    color: yellow;
+}

@@ -5,16 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Play lotto</title>
     <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/6504d4480e.js" crossorigin="anonymous"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@500&family=Roboto+Slab&family=Work+Sans:wght@100&display=swap" rel="stylesheet">
     
 </head>
 <body>
-    <h1>Play the Lotto!</h1>
-<!--     <h3>{game.message}</h3> -->
-    <h3>Here are the winning numbers: </h3>
+    <div class="header-title">
+        <h1>LottoJS <i class="fa-solid fa-ticket"></i></h1>
+        <h3>A lotto simulation, try to play the lotto and see if you can win</h3>
+    </div>
+    <h3>Here are the <span id="yellow-text">winning numbers</span>:</h3>
     <h3 id="winning_numbers"></h3>
-    <button onClick=game.playLotto()>Play</button>
+    <button onClick=game.playLotto()>Play 1,000 times</button>
     <!-- Your numbers -->
-    <!-- <h3 id="attempts"></h3> -->
     <h2 id="currentPlay"></h2>
     <h3 id="message"></h3>
 
