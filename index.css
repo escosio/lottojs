@@ -38,3 +38,10 @@ h3 {
 #yellow-text {
     color: yellow;
 }
+
+#matchingNumbers {
+    width: 80%;
+    /* padding: 5%; */
+    margin: auto;
+    text-align: center;
+}

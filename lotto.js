@@ -6,6 +6,7 @@ class LottoGame {
         // this.currentNumbers = this.winningNumbers
         this.message = "Click the button to play. Note: a single play will simulate 1000 plays."
         this.attempts = 0
+        this.bestPlay = []
     }
 
     generateLottoNumbers(numCount = 6) {
@@ -23,13 +24,27 @@ class LottoGame {
 
     compareNumbers(numArray1, numArray2) {
         var match = true
+        var matchingNumbers = []
 
-        for (let i = 0; i <= numArray1.length; i++) {
+
+        for (let i in numArray1) {
+            i = Number(i)
             if (numArray1[i] != numArray2[i]) {
-                return false
+                match = false
+                // return false
+            } else {
+                // matchingNumbers += 1
+                matchingNumbers.push(numArray1[i])
             }
         }
+        
+        // console.log(matchingNumbers)
+        if (matchingNumbers.length > this.bestPlay.length) {
+            this.bestPlay = matchingNumbers
+        }
+
         return match
+
     }
 
     playLotto(winningNumbers) {
@@ -57,10 +72,11 @@ class LottoGame {
         }
         document.getElementById('message').innerHTML = this.message
         console.log(this.attempts)
-        document.getElementById('currentPlay').innerHTML = `Your last play: ${this.currentNumbers}`
+        document.getElementById('currentPlay').innerHTML = `Your last play: ${this.currentNumbers.join(", ")}`
+        document.getElementById('matchingNumbers').innerHTML = "Numbers hit in your best play: " + game.bestPlay.join(', ')
     }
 }
     const game = new LottoGame()
 
-    document.getElementById('winning_numbers').innerHTML = game.winningNumbers
+    document.getElementById('winning_numbers').innerHTML = game.winningNumbers.join(", ")
     document.getElementById('message').innerHTML = game.message
