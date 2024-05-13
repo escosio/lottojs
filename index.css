@@ -11,16 +11,27 @@ body {
     font-family: 'Work Sans', sans-serif;
 }
 
+.checkbox-containter {
+    padding-top: auto;
+}
+
 button {
     width: 200px;
     height: 50px;
     background-color: ghostwhite;
     border-radius: 10px;
     font-weight: bold;
-    margin-bottom: 80px;
-    margin-top: 20px;
+    /* margin-bottom: 80px;
+    margin-top: 20px; */
     font-size: medium;
     color: black;
+}
+.button-container {
+    /* margin-bottom: 80px;
+    margin-top: 20px; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .header-title {

@@ -2,11 +2,11 @@ class LottoGame {
     constructor(winningNumbers, currentNumbers, message, attempts) {
         this.winningNumbers = this.generateLottoNumbers()
         this.currentNumbers = this.generateLottoNumbers()
-        // to test if function works correctly, comment out line below:
-        // this.currentNumbers = this.winningNumbers
         this.message = "Click the button to play. Note: a single play will simulate 1000 plays."
         this.attempts = 0
         this.bestPlay = []
+        this.autoplay = false
+        this.playHistory = []
     }
 
     generateLottoNumbers(numCount = 6) {
@@ -31,14 +31,11 @@ class LottoGame {
             i = Number(i)
             if (numArray1[i] != numArray2[i]) {
                 match = false
-                // return false
             } else {
-                // matchingNumbers += 1
                 matchingNumbers.push(numArray1[i])
             }
         }
         
-        // console.log(matchingNumbers)
         if (matchingNumbers.length > this.bestPlay.length) {
             this.bestPlay = matchingNumbers
         }
@@ -48,16 +45,16 @@ class LottoGame {
     }
 
     playLotto(winningNumbers) {
-        // this.currentNumbers = this.generateLottoNumbers()
         var maxAttempts = this.attempts + 1000
         var youWon = false
 
+        // Check for winning numbers while you havent won and are below min attempts
         while ((youWon == false) && (this.attempts < maxAttempts)) {
             if (this.compareNumbers(this.currentNumbers, this.winningNumbers)) {
                 youWon = true
-            } else {
+            }
+            else {
                 this.attempts += 1
-                // document.getElementById('attempts').innerHTML = "Attempts: " + this.attempts
                 this.currentNumbers = this.generateLottoNumbers()
             }
         }
@@ -67,13 +64,30 @@ class LottoGame {
                 this.attempts = 1
             }
             this.message = `Congrats! You won on ${this.attempts.toLocaleString()} attempts and spent $${(this.attempts * 2).toLocaleString()}`
-        } else {
+        } else if (this.autoplay) {
+            maxAttempts += 1000
+            this.playLotto(winningNumbers)
+        } else {  
             this.message = `Sorry, you played ${this.attempts.toLocaleString()} times and spent $${(this.attempts*2).toLocaleString()}.00 but did not win.`
         }
         document.getElementById('message').innerHTML = this.message
         console.log(this.attempts)
         document.getElementById('currentPlay').innerHTML = `Your last play: ${this.currentNumbers.join(", ")}`
         document.getElementById('matchingNumbers').innerHTML = "Numbers hit in your best play: " + game.bestPlay.join(', ')
+        
+    }
+
+    getButtonText() {
+        if (document.getElementById("autoplayCheckbox").checked) {
+            document.getElementById("playButton").innerHTML = "Play until you win";
+        } else {
+            document.getElementById("playButton").innerHTML = "Play 1,000 times";
+        }
+    }
+
+    setAutoplay() {
+        this.autoplay = !this.autoplay
+        this.getButtonText()
     }
 }
     const game = new LottoGame()
