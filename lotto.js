@@ -1,122 +1,111 @@
 class LottoGame {
-  constructor(winningNumbers, currentNumbers, message, attempts) {
-    this.playHistory = [];
+  constructor() {
+    this.defaultMaxAttempts = 10000;
     this.winningNumbers = this.generateLottoNumbers();
-    this.currentNumbers = this.generateLottoNumbers();
-    this.message =
-      "Click the button to play. Note: a single play will simulate 1000 plays.";
+    this.currentNumbers = [];
+    this.message = `Click the button to play. Note: a single play will simulate ${this.defaultMaxAttempts.toLocaleString()} plays.`;
     this.attempts = 0;
     this.bestPlay = [];
-    this.autoplay = false;
-    this.defaultMaxAttempts = 10000;
+    this.playing = false;
   }
 
-  generateLottoNumbers(numCount = 6, playHistoryArray = this.playHistory) {
+  generateLottoNumbers(numCount = 6) {
     const nums = [];
 
     while (nums.length < numCount) {
-      const randomNumber = Math.floor(Math.random() * 70);
+      const randomNumber = Math.floor(Math.random() * 69) + 1;
       if (!nums.includes(randomNumber)) {
         nums.push(randomNumber);
       }
     }
-    nums.sort();
-    if (playHistoryArray.includes(nums)) {
-      nums = this.generateLottoNumbers();
-      console.log("Skipping because number has already been played");
-    } else {
-      playHistoryArray.push(nums);
-    }
-    return nums;
+    return nums.sort((a, b) => a - b);
   }
 
   compareNumbers(numArray1, numArray2) {
-    var match = true;
-    var matchingNumbers = [];
-
-    for (let i in numArray1) {
-      i = Number(i);
-      if (numArray1[i] != numArray2[i]) {
-        match = false;
-      } else {
-        matchingNumbers.push(numArray1[i]);
-      }
-    }
+    const matchingNumbers = numArray1.filter((n) => numArray2.includes(n));
 
     if (matchingNumbers.length > this.bestPlay.length) {
       this.bestPlay = matchingNumbers;
     }
 
-    return match;
+    return matchingNumbers.length === numArray2.length;
   }
 
-  playLotto(winningNumbers) {
-    var maxAttempts = this.attempts + this.defaultMaxAttempts;
-    var youWon = false;
+  async playLotto() {
+    // A second click while playing stops the run
+    if (this.playing) {
+      this.playing = false;
+      return;
+    }
+    this.playing = true;
+    document.getElementById("playButton").innerHTML = "Stop";
 
-    document.getElementById("playButton").innerHTML = "Playing...";
-    // Check for winning numbers while you havent won and are below min attempts
+    const autoplay = this.isAutoplay();
+    const maxAttempts = this.attempts + this.defaultMaxAttempts;
+    const chunkSize = 50000;
+    let youWon = false;
+
+    // Play in chunks and yield between them so the page can repaint
     while (
-      (!youWon && this.attempts < maxAttempts) ||
-      (!youWon && this.autoplay)
+      this.playing &&
+      !youWon &&
+      (autoplay || this.attempts < maxAttempts)
     ) {
-      if (this.compareNumbers(this.currentNumbers, this.winningNumbers)) {
-        youWon = true;
-      } else {
-        try {
-          this.attempts += 1;
-          this.currentNumbers = this.generateLottoNumbers();
-          this.playHistory.push(this.currentNumbers);
-        } catch (error) {
-          console.log(error);
+      const chunkEnd = autoplay
+        ? this.attempts + chunkSize
+        : Math.min(maxAttempts, this.attempts + chunkSize);
+
+      while (this.attempts < chunkEnd) {
+        this.attempts += 1;
+        this.currentNumbers = this.generateLottoNumbers();
+        if (this.compareNumbers(this.currentNumbers, this.winningNumbers)) {
+          youWon = true;
           break;
         }
       }
+
+      this.render(youWon);
+      await new Promise((resolve) => setTimeout(resolve, 0));
     }
+
+    this.playing = false;
+    document.getElementById("playButton").innerHTML = youWon
+      ? "You won!"
+      : "Play again";
+    document.getElementById("playButton").disabled = youWon;
+  }
+
+  render(youWon) {
+    const moneySpent = (this.attempts * 2).toLocaleString();
 
     if (youWon) {
-      if (this.attempts == 0) {
-        this.attempts = 1;
-      }
-      this.message = `Congrats! You won on ${this.attempts.toLocaleString()} attempts and spent $${(
-        this.attempts * 2
-      ).toLocaleString()}`;
-      document.getElementById("message").innerHTML = this.message;
-      console.log("You won!");
-    } else if (this.autoplay) {
-      try {
-        this.maxAttempts += this.defaultMaxAttempts;
-        this.message = `Sorry, you played ${this.attempts.toLocaleString()} times and spent $${(
-          this.attempts * 2
-        ).toLocaleString()}.00 but did not win.`;
-        this.playLotto(this.winningNumbers);
-      } catch (error) {
-        console.log(error);
-      }
+      this.message = `Congrats! You won on ${this.attempts.toLocaleString()} attempts and spent $${moneySpent}.00`;
     } else {
-      this.message = `Sorry, you played ${this.attempts.toLocaleString()} times and spent $${(
-        this.attempts * 2
-      ).toLocaleString()}.00 but did not win.`;
+      this.message = `Sorry, you played ${this.attempts.toLocaleString()} times and spent $${moneySpent}.00 but did not win.`;
     }
 
-    console.log(this.attempts);
     document.getElementById("message").innerHTML = this.message;
     document.getElementById(
       "currentPlay"
     ).innerHTML = `Your last play: ${this.currentNumbers.join(", ")}`;
     document.getElementById("matchingNumbers").innerHTML =
-      "Numbers hit in your best play: " + game.bestPlay.join(", ");
-    document.getElementById("playButton").innerHTML = "Play again";
+      "Numbers hit in your best play: " + this.bestPlay.join(", ");
     document.getElementById(
       "attempts"
     ).innerHTML = `Attempts: ${this.attempts.toLocaleString()}`;
-    document.getElementById("moneySpent").innerHTML = `Money spent: $${(
-      this.attempts * 2
-    ).toLocaleString()}`;
+    document.getElementById(
+      "moneySpent"
+    ).innerHTML = `Money spent: $${moneySpent}`;
+  }
+
+  isAutoplay() {
+    const checkbox = document.getElementById("autoplayCheckbox");
+    return checkbox ? checkbox.checked : false;
   }
 
   getButtonText() {
-    if (document.getElementById("autoplayCheckbox").checked) {
+    if (this.playing) return;
+    if (this.isAutoplay()) {
       document.getElementById("playButton").innerHTML = "Play until you win";
     } else {
       document.getElementById(
@@ -124,14 +113,10 @@ class LottoGame {
       ).innerHTML = `Play ${this.defaultMaxAttempts.toLocaleString()} times`;
     }
   }
-
-  setAutoplay() {
-    this.autoplay = !this.autoplay;
-    this.getButtonText();
-  }
 }
 const game = new LottoGame();
 
 document.getElementById("winning_numbers").innerHTML =
   game.winningNumbers.join(", ");
 document.getElementById("message").innerHTML = game.message;
+game.getButtonText();

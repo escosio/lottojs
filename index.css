@@ -11,8 +11,8 @@ body {
     font-family: 'Work Sans', sans-serif;
 }
 
-.checkbox-containter {
-    padding-top: auto;
+.checkbox-container {
+    padding-top: 10px;
 }
 
 button {

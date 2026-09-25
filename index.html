@@ -44,11 +44,9 @@
     <div class="button-container">
       <button onClick="game.playLotto()" id="playButton">Play</button>
     </div>
-    <!-- <div>
-      <label>Autoplay</label>
-      <input type="checkbox" id="autoplayCheckbox" onClick="game.setAutoplay()"/>
-    </div> -->
-      </div>
+    <div class="checkbox-container">
+      <label for="autoplayCheckbox">Autoplay</label>
+      <input type="checkbox" id="autoplayCheckbox" onChange="game.getButtonText()" />
     </div>
     <!-- Your numbers -->
     <h2 id="currentPlay"></h2>
